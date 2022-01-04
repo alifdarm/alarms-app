@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class ClockPainter extends CustomPainter {
   final DateTime dateTime;
+  final bool isRealtime;
 
-  ClockPainter(this.dateTime);
+  ClockPainter(this.dateTime, this.isRealtime);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -32,17 +33,7 @@ class ClockPainter extends CustomPainter {
         Offset(centerX * 2 - 10, centerY), quarterTimePaint);
     canvas.drawLine(Offset(centerX, 10), Offset(centerX, 30), quarterTimePaint);
     canvas.drawLine(Offset(centerX, centerY * 2 - 30),
-        Offset(centerX, centerY * 2 - 10), quarterTimePaint);    
-    canvas.drawPoints(
-      PointMode.points, 
-      [
-        Offset(30, centerY),
-        Offset(centerX * 2 - 10, centerY),
-        Offset(centerX, 30),
-        Offset(centerX, centerY * 2 - 10),
-      ], 
-      Paint()
-    );
+        Offset(centerX, centerY * 2 - 10), quarterTimePaint);
 
     // Hours position
     double hourX = centerX +
@@ -56,19 +47,26 @@ class ClockPainter extends CustomPainter {
     canvas.drawLine(center, Offset(hourX, hourY), hoursMinutePaint);
 
     // Minute Position
-    double minuteX =
-        centerX + size.width * 0.3 * cos((dateTime.minute + dateTime.second/60) * 6 * pi / 180);
-    double minuteY =
-        centerY + size.width * 0.3 * sin((dateTime.minute + dateTime.second/60) * 6 * pi / 180);
+    double minuteX = centerX +
+        size.width *
+            0.3 *
+            cos((dateTime.minute + dateTime.second / 60) * 6 * pi / 180);
+    double minuteY = centerY +
+        size.width *
+            0.3 *
+            sin((dateTime.minute + dateTime.second / 60) * 6 * pi / 180);
     canvas.drawLine(center, Offset(minuteX, minuteY), hoursMinutePaint);
 
-    // Second Position
-    double secondX =
-        centerX + size.width * 0.4 * cos(dateTime.second * 6 * pi / 180);
-    double secondY =
-        centerY + size.width * 0.4 * sin(dateTime.second * 6 * pi / 180);
-    canvas.drawLine(center, Offset(secondX, secondY), secondsPaint);
+    if (isRealtime) {
+      // Second Position
+      double secondX =
+          centerX + size.width * 0.4 * cos(dateTime.second * 6 * pi / 180);
+      double secondY =
+          centerY + size.width * 0.4 * sin(dateTime.second * 6 * pi / 180);
+      canvas.drawLine(center, Offset(secondX, secondY), secondsPaint);
+    }
 
+    // Draw center points
     Paint dotPainter = Paint()..color = Colors.black;
     canvas.drawCircle(center, 4, dotPainter);
   }

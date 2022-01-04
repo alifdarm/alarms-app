@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:alarms_app/views/widgets/clock_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_alarm_app/views/widgets/clock_painter.dart';
 
 class ClockWidget extends StatefulWidget {
-  const ClockWidget({Key? key}) : super(key: key);
-
+  const ClockWidget({Key? key, this.isRealtime = true, this.dateTime})
+      : super(key: key);
+  final bool isRealtime;
+  final DateTime? dateTime;
   @override
   _ClockWidgetState createState() => _ClockWidgetState();
 }
@@ -25,23 +27,27 @@ class _ClockWidgetState extends State<ClockWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        _dateTime = DateTime.now();
+    print(_dateTime.toIso8601String());
+    if (widget.isRealtime) {
+      Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          _dateTime = DateTime.now();
+        });
       });
-    });
+    }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.dateTime != null) {
+      _dateTime = widget.dateTime!;
+    }
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -49,20 +55,18 @@ class _ClockWidgetState extends State<ClockWidget> {
           aspectRatio: 1,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow:  [
-                BoxShadow(
-                  offset: Offset(0, 6),
-                  blurRadius: 6,
-                  color: Color(0xFF364564).withOpacity(0.14)
-                )
-              ]
-            ),
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0, 6),
+                      blurRadius: 6,
+                      color: Color(0xFF364564).withOpacity(0.14))
+                ]),
             child: Transform.rotate(
-              angle: -pi/2,
+              angle: -pi / 2,
               child: CustomPaint(
-                painter: ClockPainter(_dateTime),
+                painter: ClockPainter(_dateTime, widget.isRealtime),
               ),
             ),
           ),
