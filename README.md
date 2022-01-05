@@ -4,13 +4,16 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Clone this project to your local computer
 
-A few resources to get you started if this is your first Flutter project:
+```git clone https://github.com/alif338/alarms-app.git```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Install packeges
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```flutter pub get```
+
+And then, run your app. Make sure you have an active emulator/simulator before running
+
+```flutter run```
+
+Optional flags: ```--debug```, for debug mode. ```--profile```, for profiling your app, and ```--release``` for make your app is in production mode
