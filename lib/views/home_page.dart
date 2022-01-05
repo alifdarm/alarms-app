@@ -72,19 +72,37 @@ class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
             SizedBox(
               height: 10.w,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                NormalText(
-                    text: "Alarm Active: 2", color: Colors.black, size: 13.sp),
-                Container(
-                  width: 2,
-                  height: 10.w,
-                  color: Colors.grey,
-                ),
-                NormalText(
-                    text: "Alarm inactive: 4", color: Colors.black, size: 13.sp)
-              ],
+            Consumer<AlarmProvider>(
+              builder: (context, provider, _) {
+                  final activeUser = provider.alarms
+                      .where((element) => element.isRinged)
+                      .length;
+                  final inactiveUser = provider.alarms.length - activeUser;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        NormalText(
+                            text: "Alarm Active", color: Colors.black, size: 13.sp),
+                        NormalText(text: activeUser.toString(), size: 18.sp, weight: FontWeight.bold)
+                      ],
+                    ),
+                    Container(
+                      width: 2,
+                      height: 10.w,
+                      color: Colors.grey,
+                    ),
+                    Column(
+                      children: [
+                        NormalText(
+                            text: "Alarm inactive", color: Colors.black, size: 13.sp),
+                        NormalText(text: inactiveUser.toString(), size: 18.sp, weight: FontWeight.bold,)
+                      ],
+                    )
+                  ],
+                );
+              }
             ),
             SizedBox(
               height: 5.w,

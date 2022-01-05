@@ -71,8 +71,7 @@ class NotificationHelper {
       await showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            
-                title: Text(data.alarmId.toString()),
+                title: Text("Alarm Messages"),
                 content: Text("Lorem Ipsum dolor sit amet"),
               ));
     });
