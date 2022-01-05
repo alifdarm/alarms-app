@@ -36,6 +36,29 @@ class _AddNewAlarmState extends State<AddNewAlarm> {
     }
   }
 
+  void setAlarm() async {
+    if (type == AlarmType.OneShot) {
+      if (_dateTime.hour < DateTime.now().hour) { // Dipastikan yang dimaksud adalah keesokan harinya
+        await AndroidAlarmManager.oneShotAt(
+          _dateTime.add(Duration(days: 1)), hour * 60 + minute, BackgroundService.callback,
+          exact: true, wakeup: true, alarmClock: true);
+      } else {
+        await AndroidAlarmManager.oneShotAt(
+          _dateTime, hour * 60 + minute, BackgroundService.callback,
+          exact: true, wakeup: true, alarmClock: true);
+      }
+
+    } else {
+      await AndroidAlarmManager.periodic(
+        Duration(days: 1), hour * 60 + minute, BackgroundService.callback, startAt: _dateTime,
+        exact: true, wakeup: true);
+    }
+    Provider.of<AlarmProvider>(context, listen: false)
+        .insertAlarm(
+            Alarm(hour * 60 + minute, _dateTime, alarmType(type), true));
+    Navigator.pop(context);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -228,15 +251,7 @@ class _AddNewAlarmState extends State<AddNewAlarm> {
               ),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () async {
-                    // await AndroidAlarmManager.oneShot(
-                    //     Duration(seconds: 15), 1, BackgroundService.callback,
-                    //     exact: true, wakeup: true, alarmClock: true);
-                    Provider.of<AlarmProvider>(context, listen: false)
-                        .insertAlarm(
-                            Alarm(hour * 60 + minute, _dateTime, alarmType(type), true));
-                    Navigator.pop(context);
-                  },
+                  onPressed: setAlarm,
                   child: NormalText(
                     size: 13.sp,
                     text: 'Done',

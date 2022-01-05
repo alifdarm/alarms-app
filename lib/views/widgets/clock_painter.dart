@@ -60,9 +60,9 @@ class ClockPainter extends CustomPainter {
     if (isRealtime) {
       // Second Position
       double secondX =
-          centerX + size.width * 0.4 * cos(dateTime.second * 6 * pi / 180);
+          centerX + size.width * 0.35 * cos(dateTime.second * 6 * pi / 180);
       double secondY =
-          centerY + size.width * 0.4 * sin(dateTime.second * 6 * pi / 180);
+          centerY + size.width * 0.35 * sin(dateTime.second * 6 * pi / 180);
       canvas.drawLine(center, Offset(secondX, secondY), secondsPaint);
     }
 

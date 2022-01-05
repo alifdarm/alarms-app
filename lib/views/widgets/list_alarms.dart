@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_app/controllers/alarm_provider.dart';
 import 'package:flutter_alarm_app/views/widgets/custom_text.dart';
@@ -36,7 +37,11 @@ class _ListAlarmsState extends State<ListAlarms> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NormalText(
-                          text: alarm.scheduleType == "one_shot" ? "Ring Once" : "Periodic", color: Colors.black, size: 11.sp),
+                          text: alarm.scheduleType == "one_shot"
+                              ? "Ring Once"
+                              : "Periodic",
+                          color: Colors.black,
+                          size: 11.sp),
                       TextButton.icon(
                         onPressed: () {
                           showDialog(
@@ -51,10 +56,12 @@ class _ListAlarmsState extends State<ListAlarms> {
                                               Navigator.pop(context),
                                           child: Text("Cancel")),
                                       TextButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             Provider.of<AlarmProvider>(context,
                                                     listen: false)
                                                 .deleteAlarm(alarm.alarmId);
+                                            await AndroidAlarmManager.cancel(
+                                                alarm.alarmId);
                                             Navigator.pop(context);
                                           },
                                           child: Text("Ok")),

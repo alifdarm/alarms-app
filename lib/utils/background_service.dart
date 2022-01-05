@@ -2,9 +2,13 @@ import 'dart:isolate';
 
 import 'dart:ui';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:flutter_alarm_app/controllers/alarm_provider.dart';
 import 'package:flutter_alarm_app/main.dart';
 import 'package:flutter_alarm_app/models/alarm.dart';
+import 'package:flutter_alarm_app/utils/database.dart';
 import 'package:flutter_alarm_app/utils/notification.dart';
+import 'package:provider/provider.dart';
 
 final ReceivePort port = ReceivePort();
 
@@ -31,9 +35,24 @@ class BackgroundService {
 
   static Future<void> callback() async {
     final NotificationHelper _notificationHelper = NotificationHelper();
+    final AlarmProvider provider = AlarmProvider(DatabaseHelper());
     print('alarm Fired');
-    await _notificationHelper.showNotification(
-        flutterLocalNotificationsPlugin, Alarm(123, DateTime.now(), "periodic", true));
+    print("ISI LIST ALARM ${provider.alarms}");
+    // final alarms = provider.alarms
+    //     .where((element) =>
+    //         element.alarmId == DateTime.now().hour * 60 + DateTime.now().minute).toList();
+    final ringingAlarm = await provider.getAlarmById(DateTime.now().hour * 60 + DateTime.now().minute);
+
+    if (ringingAlarm.scheduleType == "one_shot") {
+      await _notificationHelper.showNotification(
+          flutterLocalNotificationsPlugin, ringingAlarm);
+      ringingAlarm.isRinged = false;
+      await provider.updateAlarm(ringingAlarm);
+    } else {
+      await _notificationHelper.showNotification(
+          flutterLocalNotificationsPlugin, ringingAlarm);
+      print("Its periodic");
+    }
 
     // This will be null if we're running in the background.
     uiSendPort ??= IsolateNameServer.lookupPortByName(_isolateName);

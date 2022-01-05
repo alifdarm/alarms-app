@@ -63,6 +63,13 @@ class DatabaseHelper {
     return results.map((e) => Alarm.fromJson(e)).toList();
   }
 
+  Future<Alarm> getAlarmById(int id) async {
+    final db = await database;
+    final result =
+        await db.query(_tblAlarm, where: 'alarm_id = ?', whereArgs: [id]);
+    return result.map((e) => Alarm.fromJson(e)).toList()[0];
+  }
+
   Future<void> removeFavorite(int id) async {
     final db = await database;
 

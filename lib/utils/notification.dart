@@ -48,7 +48,14 @@ class NotificationHelper {
 
     var androidPlatformChannelSpecifies = AndroidNotificationDetails(
         _channelId, _channelName,
-        importance: Importance.max, priority: Priority.high, ticker: 'ticker');
+        importance: Importance.max,
+        priority: Priority.high, 
+        ticker: 'ticker',
+        visibility: NotificationVisibility.public,
+        enableVibration: true,
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound('notification')
+    );
     var iOSPlatformChannelSpecifies = IOSNotificationDetails();
     var platformChannelSpecifies = NotificationDetails(
         android: androidPlatformChannelSpecifies,
@@ -64,6 +71,7 @@ class NotificationHelper {
       await showDialog(
           context: context,
           builder: (_) => AlertDialog(
+            
                 title: Text(data.alarmId.toString()),
                 content: Text("Lorem Ipsum dolor sit amet"),
               ));

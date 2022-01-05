@@ -16,13 +16,14 @@ class HomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<HomePage> {
+class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool sampleSwitch = true;
   final NotificationHelper _notificationHelper = NotificationHelper();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
     Future.microtask(
         () => Provider.of<AlarmProvider>(context, listen: false).fetchAlarm());
     _notificationHelper.configureSeelectNotificationSubject(context);
@@ -34,9 +35,24 @@ class _MyHomePageState extends State<HomePage> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    print(state);
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive) return;
+
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.resumed) {
+      print("App Resumed");
+    }
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     selectNotificationSubject.close();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
