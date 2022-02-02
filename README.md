@@ -4,7 +4,7 @@ A new Flutter project.
 
 ## Getting Started
 
-Clone this project to your local computer
+Clone this project to your local computer, or via repl.it
 
 ```git clone https://github.com/alif338/alarms-app.git```
 
